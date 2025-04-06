@@ -10,6 +10,7 @@ import SearchConsole from "./pages/SearchConsole";
 import Analytics from "./pages/Analytics";
 import Performance from "./pages/Performance";
 import DomainAnalysis from "./pages/DomainAnalysis";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/performance" element={<Performance />} />
           <Route path="/domain-analysis" element={<DomainAnalysis />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
