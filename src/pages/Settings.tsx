@@ -8,17 +8,44 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Settings2, Bell, Lock, Globe, Eye, Database } from "lucide-react";
+import { Settings2, Bell, Lock, Globe, Eye, Database, Plug } from "lucide-react";
+import { ConnectApiCard } from "@/components/dashboard/ConnectApiCard";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
 
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [weeklyReports, setWeeklyReports] = useState(true);
   const [apiKey, setApiKey] = useState("");
+  const [googleAnalyticsConnected, setGoogleAnalyticsConnected] = useState(false);
+  const [searchConsoleConnected, setSearchConsoleConnected] = useState(false);
 
   const handleSaveSettings = () => {
     toast.success("Settings saved successfully!");
+  };
+
+  const handleConnectGoogleAnalytics = () => {
+    // In a real implementation, this would open Google OAuth flow
+    window.open("https://analytics.google.com/analytics/web/", "_blank");
+    
+    // For demo purposes, we'll just toggle the connected state
+    setTimeout(() => {
+      setGoogleAnalyticsConnected(true);
+      toast.success("Google Analytics connected successfully!");
+    }, 1000);
+  };
+
+  const handleConnectSearchConsole = () => {
+    // In a real implementation, this would open Google OAuth flow
+    window.open("https://search.google.com/search-console", "_blank");
+    
+    // For demo purposes, we'll just toggle the connected state
+    setTimeout(() => {
+      setSearchConsoleConnected(true);
+      toast.success("Google Search Console connected successfully!");
+    }, 1000);
   };
 
   return (
@@ -42,7 +69,7 @@ const Settings = () => {
               Notifications
             </TabsTrigger>
             <TabsTrigger value="api">
-              <Globe className="h-4 w-4 mr-2" />
+              <Plug className="h-4 w-4 mr-2" />
               API Settings
             </TabsTrigger>
           </TabsList>
@@ -138,68 +165,59 @@ const Settings = () => {
           </TabsContent>
 
           <TabsContent value="api">
-            <Card>
+            <Card className="mb-6">
               <CardHeader>
-                <CardTitle>API Configuration</CardTitle>
+                <CardTitle>API Keys</CardTitle>
                 <CardDescription>
-                  Manage API keys and external service connections
+                  Manage your API keys for direct API access
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="googleApiKey">Google Search Console API Key</Label>
-                    <div className="flex gap-2">
-                      <Textarea 
-                        id="googleApiKey" 
-                        placeholder="Enter your API key" 
-                        value={apiKey}
-                        onChange={(e) => setApiKey(e.target.value)}
-                      />
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Enter your Google Search Console API key to connect your account
-                    </p>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="googleApiKey">Google API Key</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="googleApiKey"
+                      type="password"
+                      placeholder="Enter your API key"
+                      value={apiKey}
+                      onChange={(e) => setApiKey(e.target.value)}
+                    />
+                    <Button onClick={() => {
+                      toast.success("API key saved");
+                    }}>Save</Button>
                   </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label>Connected Services</Label>
-                        <div className="text-sm text-muted-foreground">
-                          Manage external service connections
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between py-2">
-                        <div className="flex items-center space-x-2">
-                          <Database className="h-5 w-5 text-primary" />
-                          <span>Google Analytics</span>
-                        </div>
-                        <Button variant="outline" size="sm">Connect</Button>
-                      </div>
-                      <div className="flex items-center justify-between py-2">
-                        <div className="flex items-center space-x-2">
-                          <Eye className="h-5 w-5 text-primary" />
-                          <span>Google Search Console</span>
-                        </div>
-                        <Button variant="outline" size="sm">Connect</Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <Button onClick={handleSaveSettings}>
-                    Save Settings
-                  </Button>
+                  <p className="text-sm text-muted-foreground">
+                    Used for direct access to Google APIs (optional)
+                  </p>
                 </div>
               </CardContent>
             </Card>
+            
+            <h3 className="text-lg font-medium mb-4">Connect Services</h3>
+            <div className="grid gap-6 md:grid-cols-2">
+              <ConnectApiCard
+                title="Google Analytics"
+                description="Connect to view analytics data directly in your dashboard"
+                icon={<Database className="h-5 w-5 text-primary" />}
+                connected={googleAnalyticsConnected}
+                onConnect={handleConnectGoogleAnalytics}
+              />
+              
+              <ConnectApiCard
+                title="Google Search Console"
+                description="Connect to monitor and optimize your site performance"
+                icon={<Eye className="h-5 w-5 text-primary" />}
+                connected={searchConsoleConnected}
+                onConnect={handleConnectSearchConsole}
+              />
+            </div>
+            
+            <div className="flex justify-end mt-6">
+              <Button onClick={handleSaveSettings}>
+                Save All Settings
+              </Button>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
