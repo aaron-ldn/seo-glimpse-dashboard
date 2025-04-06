@@ -22,6 +22,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link, useLocation } from 'react-router-dom';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -44,6 +45,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 }
 
 function DashboardSidebar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const menuItems = [
     {
       title: "Dashboard",
@@ -53,27 +57,27 @@ function DashboardSidebar() {
     {
       title: "Search Console",
       icon: Search,
-      url: "#search-console",
+      url: "/search-console",
     },
     {
       title: "Analytics",
       icon: BarChart3,
-      url: "#analytics",
+      url: "/analytics",
     },
     {
       title: "Performance",
       icon: TrendingUp,
-      url: "#performance",
+      url: "/performance",
     },
     {
-      title: "Site Health",
+      title: "Domain Analysis",
       icon: Globe,
-      url: "#site-health",
+      url: "/domain-analysis",
     },
     {
       title: "Settings",
       icon: Settings,
-      url: "#settings",
+      url: "/settings",
     },
   ];
 
@@ -91,16 +95,17 @@ function DashboardSidebar() {
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.title} className="px-3">
                 <SidebarMenuButton asChild className="px-3">
-                  <a 
-                    href={item.url}
+                  <Link 
+                    to={item.url}
                     className={cn(
                       "flex items-center gap-3 rounded-md px-3 py-2 text-sidebar-foreground transition-colors",
-                      "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                      currentPath === item.url && "bg-sidebar-accent text-sidebar-accent-foreground"
                     )}
                   >
                     <item.icon className="h-5 w-5" />
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
